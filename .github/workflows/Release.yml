@@ -30,6 +30,7 @@ jobs:
       run: |
           dnf --assumeyes group install "Development Tools" "RPM Development Tools"
           dnf --assumeyes install wget openssl-devel diffutils delve which
+          dnf --assumeyes install 'dnf-command(builddep)'
 
     # Checkout git repository and submodules
     # fetch-depth must be 0 to use git describe
@@ -48,6 +49,7 @@ jobs:
                   http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/golang-src-1.18.2-1.module_el8.7.0+1173+5d37c0fd.noarch.rpm \
                   http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/go-toolset-1.18.2-1.module_el8.7.0+1173+5d37c0fd.x86_64.rpm
           rpm -i go*.rpm
+          dnf --assumeyes builddep build/package/cc-backend.spec
 
     - name: RPM build ClusterCockpit
       id: rpmbuild
@@ -116,6 +118,7 @@ jobs:
                   http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/golang-src-1.18.2-1.module_el8.7.0+1173+5d37c0fd.noarch.rpm \
                   http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/go-toolset-1.18.2-1.module_el8.7.0+1173+5d37c0fd.x86_64.rpm
           rpm -i go*.rpm
+          dnf --assumeyes builddep build/package/cc-backend.spec
 
     - name: RPM build ClusterCockpit
       id: rpmbuild
@@ -148,7 +151,7 @@ jobs:
     - name: Install development packages
       run: |
           apt update && apt --assume-yes upgrade
-          apt --assume-yes install build-essential sed git wget bash
+          apt --assume-yes install build-essential sed git wget bash yarn npm rollup
     # Checkout git repository and submodules
     # fetch-depth must be 0 to use git describe
     # See: https://github.com/marketplace/actions/checkout
@@ -198,7 +201,7 @@ jobs:
     - name: Install development packages
       run: |
           apt update && apt --assume-yes upgrade
-          apt --assume-yes install build-essential sed git wget bash
+          apt --assume-yes install build-essential sed git wget bash yarn npm rollup
     # Checkout git repository and submodules
     # fetch-depth must be 0 to use git describe
     # See: https://github.com/marketplace/actions/checkout
