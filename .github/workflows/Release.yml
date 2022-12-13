@@ -119,6 +119,7 @@ jobs:
                   http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/golang-src-1.18.2-1.module_el8.7.0+1173+5d37c0fd.noarch.rpm \
                   http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/go-toolset-1.18.2-1.module_el8.7.0+1173+5d37c0fd.x86_64.rpm
           rpm -i go*.rpm
+          dnf --assumeyes --disableplugin=subscription-manager install npm
           npm install --global yarn rollup svelte rollup-plugin-svelte
           #dnf --assumeyes builddep build/package/cc-backend.spec
 
@@ -153,8 +154,8 @@ jobs:
     - name: Install development packages
       run: |
           apt update && apt --assume-yes upgrade
-          apt --assume-yes install build-essential sed git wget bash yarn npm rollup
-          npm install --global svelte rollup-plugin-svelte
+          apt --assume-yes install build-essential sed git wget bash yarn npm
+          npm install --global svelte rollup rollup-plugin-svelte
     # Checkout git repository and submodules
     # fetch-depth must be 0 to use git describe
     # See: https://github.com/marketplace/actions/checkout
@@ -204,8 +205,8 @@ jobs:
     - name: Install development packages
       run: |
           apt update && apt --assume-yes upgrade
-          apt --assume-yes install build-essential sed git wget bash yarn npm rollup
-          npm install --global svelte rollup-plugin-svelte
+          apt --assume-yes install build-essential sed git wget bash yarn npm
+          npm install --global svelte rollup rollup-plugin-svelte
     # Checkout git repository and submodules
     # fetch-depth must be 0 to use git describe
     # See: https://github.com/marketplace/actions/checkout

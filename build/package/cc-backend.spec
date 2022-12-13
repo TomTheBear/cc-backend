@@ -8,7 +8,7 @@ Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  go-toolset
 BuildRequires:  systemd-rpm-macros
-BuildRequires:  yarn rollup npm
+BuildRequires:  npm
 
 Provides:       %{name} = %{version}
 
