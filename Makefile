@@ -91,7 +91,7 @@ RPM: build/package/cc-backend.spec
 
 .ONESHELL:
 .PHONY: DEB
-DEB: build/package/cc-backend.deb.control $(APP)
+DEB: build/package/cc-backend.deb.control $(TARGET)
 	@BASEDIR=$${PWD}
 	@WORKSPACE=$${PWD}/.dpkgbuild
 	@DEBIANDIR=$${WORKSPACE}/debian
@@ -108,11 +108,23 @@ DEB: build/package/cc-backend.deb.control $(APP)
 	@ARCH=$$(echo $$ARCH | sed -e s+'_'+'-'+g)
 	@if [ "$${ARCH}" = "x86-64" ]; then ARCH=amd64; fi
 	@PREFIX="$${NAME}-$${VERSION}_$${ARCH}"
-	@SIZE_BYTES=$$(du -bcs --exclude=.dpkgbuild "$$WORKSPACE"/ | awk '{print $$1}' | head -1 | sed -e 's/^0\+//')
+	@SIZE_BYTES=$$(du -bcs --exclude=.dpkgbuild "$${WORKSPACE}"/ | awk '{print $$1}' | head -1 | sed -e 's/^0\+//')
 	@SIZE="$$(awk -v size="$$SIZE_BYTES" 'BEGIN {print (size/1024)+1}' | awk '{print int($$0)}')"
 	#@sed -e s+"{VERSION}"+"$$VERS"+g -e s+"{INSTALLED_SIZE}"+"$$SIZE"+g -e s+"{ARCH}"+"$$ARCH"+g $$CONTROLFILE > $${DEBIANDIR}/control
 	@sed -e s+"{VERSION}"+"$$VERS"+g -e s+"{INSTALLED_SIZE}"+"$$SIZE"+g -e s+"{ARCH}"+"$$ARCH"+g $$CONTROLFILE > $${DEBIANBINDIR}/control
-	@make PREFIX=$${WORKSPACE} install
+	@mkdir "$${WORKSPACE}"/$(VAR)
+	@touch "$${WORKSPACE}"/$(VAR)/job.db
+	@cd web/frontend && yarn install && yarn build && cd -
+	@mkdir --parents --verbose $${WORKSPACE}/usr/$(BINDIR)
+	@mkdir --parents --verbose $${WORKSPACE}/usr/lib/systemd/system
+	@mkdir --parents --verbose $${WORKSPACE}/usr/lib/sysusers.d
+	@mkdir --parents --verbose $${WORKSPACE}/etc/default
+	@mkdir --parents --verbose $${WORKSPACE}/etc/$(TARGET)
+	@install -Dpm 0755 $(TARGET) $${WORKSPACE}/usr/$(BINDIR)/$(TARGET)
+	@install -Dpm 0600 configs/config.json $${WORKSPACE}/etc/$(TARGET)/$(TARGET).json
+	@install -Dpm 0644 build/package/$(TARGET).service $${WORKSPACE}/usr/lib/systemd/system/%{name}.service
+	@install -Dpm 0600 build/package/$(TARGET).config $${WORKSPACE}/etc/default/%{name}
+	@install -Dpm 0644 build/package/$(TARGET).sysusers $${WORKSPACE}/usr/lib/sysusers.d/%{name}.conf
 	@DEB_FILE="cc-metric-store_$${VERS}_$${ARCH}.deb"
 	@dpkg-deb -b $${WORKSPACE} "$$DEB_FILE"
 	@rm -r "$${WORKSPACE}"
