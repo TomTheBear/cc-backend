@@ -116,15 +116,20 @@ DEB: build/package/cc-backend.deb.control $(TARGET)
 	@touch "$${WORKSPACE}"/$(VAR)/job.db
 	@cd web/frontend && yarn install && yarn build && cd -
 	@mkdir --parents --verbose $${WORKSPACE}/usr/$(BINDIR)
-	@mkdir --parents --verbose $${WORKSPACE}/usr/lib/systemd/system
-	@mkdir --parents --verbose $${WORKSPACE}/usr/lib/sysusers.d
-	@mkdir --parents --verbose $${WORKSPACE}/etc/default
+	@cp $(TARGET) $${WORKSPACE}/usr/$(BINDIR)/$(TARGET)
+	@chmod 0755 $${WORKSPACE}/usr/$(BINDIR)/$(TARGET)
 	@mkdir --parents --verbose $${WORKSPACE}/etc/$(TARGET)
-	@install -Dpm 0755 $(TARGET) $${WORKSPACE}/usr/$(BINDIR)/$(TARGET)
-	@install -Dpm 0600 configs/config.json $${WORKSPACE}/etc/$(TARGET)/$(TARGET).json
-	@install -Dpm 0644 build/package/$(TARGET).service $${WORKSPACE}/usr/lib/systemd/system/%{name}.service
-	@install -Dpm 0600 build/package/$(TARGET).config $${WORKSPACE}/etc/default/%{name}
-	@install -Dpm 0644 build/package/$(TARGET).sysusers $${WORKSPACE}/usr/lib/sysusers.d/%{name}.conf
+	@cp configs/config.json $${WORKSPACE}/etc/$(TARGET)/$(TARGET).json
+	@chmod 0600 $${WORKSPACE}/etc/$(TARGET)/$(TARGET).json
+	@mkdir --parents --verbose $${WORKSPACE}/usr/lib/systemd/system
+	@cp build/package/$(TARGET).service $${WORKSPACE}/usr/lib/systemd/system/$(TARGET).service
+	@chmod 0644 $${WORKSPACE}/usr/lib/systemd/system/$(TARGET).service
+	@mkdir --parents --verbose $${WORKSPACE}/etc/default
+	@cp build/package/$(TARGET).config $${WORKSPACE}/etc/default/$(TARGET)
+	@chmod 0600 $${WORKSPACE}/etc/default/$(TARGET)
+	@mkdir --parents --verbose $${WORKSPACE}/usr/lib/sysusers.d
+	@cp build/package/$(TARGET).sysusers $${WORKSPACE}/usr/lib/sysusers.d/$(TARGET).conf
+	@chmod 0644 $${WORKSPACE}/usr/lib/sysusers.d/$(TARGET).conf
 	@DEB_FILE="cc-metric-store_$${VERS}_$${ARCH}.deb"
 	@dpkg-deb -b $${WORKSPACE} "$$DEB_FILE"
 	@rm -r "$${WORKSPACE}"
