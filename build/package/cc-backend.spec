@@ -23,7 +23,7 @@ ClusterCockpit backend and web frontend
 
 %build
 CURRENT_TIME=$(date +"%Y-%m-%d:T%H:%M:%S")
-VERSION=$(grep -E "^VERSION" Makefile | cut -d '=' -f 1 | tr ' ' '')
+VERSION=%{VERS}
 LD_FLAGS="-s -X main.buildTime=${CURRENT_TIME} -X main.version=${VERSION}"
 mkdir ./var
 touch ./var/job.db
