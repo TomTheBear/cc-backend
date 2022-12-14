@@ -23,12 +23,11 @@ ClusterCockpit backend and web frontend
 
 %build
 CURRENT_TIME=$(date +"%Y-%m-%d:T%H:%M:%S")
-VERSION=%{VERS}
-LD_FLAGS="-s -X main.buildTime=${CURRENT_TIME} -X main.version=${VERSION}"
+LD_FLAGS="-s -X main.buildTime=${CURRENT_TIME} -X main.version=%{VERS}"
 mkdir ./var
 touch ./var/job.db
 cd web/frontend && yarn install && yarn build && cd -
-go build -ldflags=${LD_FLAGS} ./cmd/cc-backend
+go build -ldflags=\"${LD_FLAGS}\" ./cmd/cc-backend
 
 
 %install
