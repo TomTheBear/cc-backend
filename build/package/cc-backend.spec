@@ -25,8 +25,7 @@ ClusterCockpit backend and web frontend
 #cd web/frontend/ && npm install --save-dev svelte rollup-plugin-svelte && npm audit fix && cd -
 mkdir ./var
 touch ./var/job.db
-cd web/frontend && yarn build
-cd web/frontend && yarn install
+cd web/frontend && yarn install && yarn build && cd -
 go build -ldflags=${LD_FLAGS} ./cmd/cc-backend
 
 
