@@ -22,7 +22,9 @@ ClusterCockpit backend and web frontend
 
 
 %build
-#cd web/frontend/ && npm install --save-dev svelte rollup-plugin-svelte && npm audit fix && cd -
+CURRENT_TIME=$(date +"%Y-%m-%d:T%H:%M:%S")
+VERSION=$(grep -E "^VERSION" Makefile | cut -d '=' -f 1 | tr ' ' '')
+LD_FLAGS="-s -X main.buildTime=${CURRENT_TIME} -X main.version=${VERSION}"
 mkdir ./var
 touch ./var/job.db
 cd web/frontend && yarn install && yarn build && cd -
@@ -33,6 +35,7 @@ go build -ldflags=${LD_FLAGS} ./cmd/cc-backend
 # Install cc-backend
 #make PREFIX=%{buildroot} install
 install -Dpm 755 cc-backend %{buildroot}/%{_bindir}/%{name}
+install -Dpm 0600 configs/config.json %{buildroot}%{_sysconfdir}/%{name}/%{name}.json
 # Integrate into system
 install -Dpm 0644 build/package/%{name}.service %{buildroot}%{_unitdir}/%{name}.service
 install -Dpm 0600 build/package/%{name}.config %{buildroot}%{_sysconfdir}/default/%{name}
