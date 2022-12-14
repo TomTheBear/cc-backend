@@ -103,7 +103,7 @@ DEB: build/package/cc-backend.deb.control
 	@VERS=$$(git describe --tags --abbrev=0 $${COMMITISH})
 	@VERS=$${VERS#v}
 	@VERS=$$(echo $$VERS | sed -e s+'-'+'_'+g)
-	@if [ "$${VERS}" = "" ]; then VERS="0.0.1"; fi
+	@if [ "$${VERS}" = "" ]; then VERS="$(VERSION)"; fi
 	@ARCH=$$(uname -m)
 	@ARCH=$$(echo $$ARCH | sed -e s+'_'+'-'+g)
 	@if [ "$${ARCH}" = "x86-64" ]; then ARCH=amd64; fi
@@ -112,7 +112,7 @@ DEB: build/package/cc-backend.deb.control
 	@SIZE="$$(awk -v size="$$SIZE_BYTES" 'BEGIN {print (size/1024)+1}' | awk '{print int($$0)}')"
 	#@sed -e s+"{VERSION}"+"$$VERS"+g -e s+"{INSTALLED_SIZE}"+"$$SIZE"+g -e s+"{ARCH}"+"$$ARCH"+g $$CONTROLFILE > $${DEBIANDIR}/control
 	@sed -e s+"{VERSION}"+"$$VERS"+g -e s+"{INSTALLED_SIZE}"+"$$SIZE"+g -e s+"{ARCH}"+"$$ARCH"+g $$CONTROLFILE > $${DEBIANBINDIR}/control
-	@mkdir "$${WORKSPACE}"/$(VAR)
+	@mkdir --parents --verbose "$${WORKSPACE}"/$(VAR)
 	@touch "$${WORKSPACE}"/$(VAR)/job.db
 	@cd web/frontend && yarn install && yarn build && cd -
 	@go build -ldflags=${LD_FLAGS} ./cmd/cc-backend
