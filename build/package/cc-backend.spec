@@ -6,9 +6,9 @@ Summary:        ClusterCockpit backend and web frontend
 License:        MIT
 Source0:        %{name}-%{version}.tar.gz
 
-BuildRequires:  go-toolset
-BuildRequires:  systemd-rpm-macros
-BuildRequires:  npm
+#BuildRequires:  go-toolset
+#BuildRequires:  systemd-rpm-macros
+#BuildRequires:  npm
 
 Provides:       %{name} = %{version}
 
@@ -22,13 +22,18 @@ ClusterCockpit backend and web frontend
 
 
 %build
-cd web/frontend/ && npm install --save-dev svelte rollup-plugin-svelte && cd -
-make
+#cd web/frontend/ && npm install --save-dev svelte rollup-plugin-svelte && npm audit fix && cd -
+mkdir ./var
+touch ./var/job.db
+cd web/frontend && yarn build
+cd web/frontend && yarn install
+go build -ldflags=${LD_FLAGS} ./cmd/cc-backend
 
 
 %install
 # Install cc-backend
-make PREFIX=%{buildroot} install
+#make PREFIX=%{buildroot} install
+install -Dpm 755 cc-backend %{buildroot}/%{_bindir}/%{name}
 # Integrate into system
 install -Dpm 0644 build/package/%{name}.service %{buildroot}%{_unitdir}/%{name}.service
 install -Dpm 0600 build/package/%{name}.config %{buildroot}%{_sysconfdir}/default/%{name}
