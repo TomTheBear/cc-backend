@@ -91,7 +91,7 @@ RPM: build/package/cc-backend.spec
 
 .ONESHELL:
 .PHONY: DEB
-DEB: build/package/cc-backend.deb.control $(TARGET)
+DEB: build/package/cc-backend.deb.control
 	@BASEDIR=$${PWD}
 	@WORKSPACE=$${PWD}/.dpkgbuild
 	@DEBIANDIR=$${WORKSPACE}/debian
@@ -115,6 +115,7 @@ DEB: build/package/cc-backend.deb.control $(TARGET)
 	@mkdir "$${WORKSPACE}"/$(VAR)
 	@touch "$${WORKSPACE}"/$(VAR)/job.db
 	@cd web/frontend && yarn install && yarn build && cd -
+	@go build -ldflags=${LD_FLAGS} ./cmd/cc-backend
 	@mkdir --parents --verbose $${WORKSPACE}/usr/$(BINDIR)
 	@cp $(TARGET) $${WORKSPACE}/usr/$(BINDIR)/$(TARGET)
 	@chmod 0755 $${WORKSPACE}/usr/$(BINDIR)/$(TARGET)
