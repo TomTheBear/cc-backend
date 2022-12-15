@@ -154,8 +154,8 @@ jobs:
     - name: Install development packages
       run: |
           apt update && apt --assume-yes upgrade
-          apt --assume-yes install build-essential sed git wget bash yarn npm
-          npm install --global svelte rollup rollup-plugin-svelte
+          apt --assume-yes install build-essential sed git wget bash npm
+          npm install --global yarn rollup svelte rollup-plugin-svelte
     # Checkout git repository and submodules
     # fetch-depth must be 0 to use git describe
     # See: https://github.com/marketplace/actions/checkout
@@ -209,8 +209,8 @@ jobs:
     - name: Install development packages
       run: |
           apt update && apt --assume-yes upgrade
-          apt --assume-yes install build-essential sed git wget bash yarn npm
-          npm install --global svelte rollup rollup-plugin-svelte
+          apt --assume-yes install build-essential sed git wget bash npm
+          npm install --global yarn rollup svelte rollup-plugin-svelte
     # Checkout git repository and submodules
     # fetch-depth must be 0 to use git describe
     # See: https://github.com/marketplace/actions/checkout
