@@ -174,7 +174,11 @@ jobs:
     - name: DEB build ClusterCockpit
       id: dpkg-build
       run: |
+          ls -la
+          pwd
+          env
           export PATH=/usr/local/go/bin:/usr/local/go/pkg/tool/linux_amd64:$PATH
+          git config --global --add safe.directory $(pwd)
           make DEB
     - name: Rename DEB (add '_ubuntu20.04')
       id: debrename
@@ -225,7 +229,11 @@ jobs:
     - name: DEB build ClusterCockpit
       id: dpkg-build
       run: |
+          ls -la
+          pwd
+          env
           export PATH=/usr/local/go/bin:/usr/local/go/pkg/tool/linux_amd64:$PATH
+          git config --global --add safe.directory $(pwd)
           make DEB
     - name: Rename DEB (add '_ubuntu22.04')
       id: debrename
