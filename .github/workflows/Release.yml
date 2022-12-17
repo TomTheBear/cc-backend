@@ -149,6 +149,9 @@ jobs:
     # Only job outputs can be used in child jobs
     outputs:
       deb : ${{steps.debrename.outputs.DEB}}
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      TZ: Europe/Berlin
     steps:
     # Use apt to install development packages
     - name: Install development packages
@@ -205,6 +208,9 @@ jobs:
     # Only job outputs can be used in child jobs
     outputs:
       deb : ${{steps.debrename.outputs.DEB}}
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      TZ: Europe/Berlin
     steps:
     # Use apt to install development packages
     - name: Install development packages
